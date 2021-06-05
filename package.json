@@ -16,7 +16,7 @@
     "build-container": "npm run build:js && npm run build-container:pack",
     "build-container:pack": "cd lib && cp ../package.json . && cp ../package-lock.json . && pack build --builder gcr.io/buildpacks/builder:v1 --env GOOGLE_FUNCTION_SIGNATURE_TYPE=http --env GOOGLE_FUNCTION_TARGET=entry my-function",
     "deploy-gcloud": "npm run build:js && npm run deploy-gcloud:gcloud-deploy",
-    "deploy-gcloud:gcloud-deploy": "cp package.json ./lib/. && cp package-lock.json ./lib/. && cd lib && echo \"Function name: ${FUNCTION_NAME:-my-function}\" && echo \"Region: ${REGION:-us-central1}\" && gcloud functions deploy \"${FUNCTION_NAME:-my-function}\" --entry-point entry --runtime nodejs14 --trigger-http --allow-unauthenticated --region \"${REGION:-us-central1}\""
+    "deploy-gcloud:gcloud-deploy": "cp package.json ./lib/. && cp package-lock.json ./lib/. && cd lib && G_FN_NAME=\"${FUNCTION_NAME:-my-function}\" && G_REGION=\"${REGION:-us-central1}\" && G_PROJ_ID=\"$(gcloud config get-value project)\" && echo \"Function name: ${G_FN_NAME}\" && echo \"Region: ${G_REGION}\" && echo \"Project ID: ${G_PROJ_ID}\" && gcloud functions deploy \"${G_FN_NAME}\" --entry-point entry --runtime nodejs14 --trigger-http --allow-unauthenticated --region \"${G_REGION}\" --update-env-vars X_FUNCTION_NAME=\"${G_FN_NAME}\",X_FUNCTION_REGION=\"${G_REGION}\",X_FUNCTION_PROJECT_ID=\"${G_PROJ_ID}\""
   },
   "author": "",
   "license": "ISC",
