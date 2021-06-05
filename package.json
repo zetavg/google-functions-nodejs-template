@@ -1,15 +1,22 @@
 {
-  "name": "babel-typescript-eslint-prettier",
+  "name": "my-function",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
+    "start": "nodemon --exec run-s build:js start:functions",
+    "start:functions": "node --inspect node_modules/@google-cloud/functions-framework --source=lib/index.js --target=entry",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "build": "npm run build:types && npm run build:js",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
+    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+    "build-zip": "npm run build:js && npm run build-zip:zip",
+    "build-zip:zip": "cp package.json ./lib/. && cp package-lock.json ./lib/. && mkdir -p dist && cd lib && zip -r ../dist/function.zip .",
+    "build-container": "npm run build:js && npm run build-container:pack",
+    "build-container:pack": "cd lib && cp ../package.json . && cp ../package-lock.json . && pack build --builder gcr.io/buildpacks/builder:v1 --env GOOGLE_FUNCTION_SIGNATURE_TYPE=http --env GOOGLE_FUNCTION_TARGET=entry my-function",
+    "deploy-gcloud": "npm run build:js && npm run deploy-gcloud:gcloud-deploy",
+    "deploy-gcloud:gcloud-deploy": "cp package.json ./lib/. && cp package-lock.json ./lib/. && cd lib && echo \"Function name: ${FUNCTION_NAME:-my-function}\" && echo \"Region: ${REGION:-us-central1}\" && gcloud functions deploy \"${FUNCTION_NAME:-my-function}\" --entry-point entry --runtime nodejs14 --trigger-http --allow-unauthenticated --region \"${REGION:-us-central1}\""
   },
   "author": "",
   "license": "ISC",
@@ -19,12 +26,18 @@
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/preset-env": "^7.14.4",
     "@babel/preset-typescript": "^7.13.0",
+    "@types/node": "^15.12.1",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
+    "nodemon": "^2.0.7",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.3.1",
     "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^1.7.1"
   }
 }

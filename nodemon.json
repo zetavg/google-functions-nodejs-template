@@ -1,0 +1,6 @@
+{
+  "watch": ["src"],
+  "ignore": [".git", "node_modules/**/node_modules", "lib"],
+  "delay": "1000",
+  "ext": "js,ts,json"
+}
