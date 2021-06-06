@@ -10,6 +10,10 @@ import {
   COMMANDS as RPS_COMMANDS,
   mount as mountRps,
 } from './rock-paper-scissors';
+import {
+  COMMANDS as FIREBASE_COMMANDS,
+  mount as mountFirebase,
+} from './firebase';
 
 const COMMANDS: BotCommand[] = [
   {
@@ -18,6 +22,7 @@ const COMMANDS: BotCommand[] = [
   },
   ...COUNTER_COMMANDS,
   ...RPS_COMMANDS,
+  ...FIREBASE_COMMANDS,
   {
     command: 'help',
     description: 'Show help message',
@@ -60,11 +65,12 @@ bot.help(async (ctx) => {
   );
 });
 
+mountCounter(bot);
+mountRps(bot);
+mountFirebase(bot);
+
 bot.on('sticker', (ctx) => ctx.reply('👍'));
 
 bot.hears(/[Hh]i/, (ctx) => ctx.reply('Hey there'));
-
-mountCounter(bot);
-mountRps(bot);
 
 export default bot;

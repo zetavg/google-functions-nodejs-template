@@ -19,6 +19,20 @@ export const TELEGRAM_BOT_TOKEN = required(
   'environment variable "TELEGRAM_BOT_TOKEN"',
 );
 
+/** Firebase database URL */
+export const FIREBASE_DATABASE_URL = required(
+  process.env.FIREBASE_DATABASE_URL,
+  'environment variable "FIREBASE_DATABASE_URL"',
+);
+
+/** Firebase service account credential */
+export const FIREBASE_SERVICE_ACCOUNT_CREDENTIAL = JSON.parse(
+  required(
+    process.env.FIREBASE_SERVICE_ACCOUNT_CREDENTIAL,
+    'environment variable "FIREBASE_SERVICE_ACCOUNT_CREDENTIAL"',
+  ),
+);
+
 /** Use a token to protect your URL trigger. */
 export const SERVER_TOKEN = process.env.SERVER_TOKEN;
 
